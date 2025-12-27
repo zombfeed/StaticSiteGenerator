@@ -39,7 +39,6 @@ class LeafNode(HTMLNode):
         value       : a string representing the value of the HTML tag
     Optional           ----------------------------------------
         props       : a dictionary of key-value pairs representing the attributes of the HTML tag
-
     """
 
     def __init__(self, tag, value, props=None):
@@ -49,5 +48,30 @@ class LeafNode(HTMLNode):
         if not self.value:
             raise ValueError("Error: no value was given")
         if not self.tag:
-            return f"{self.value}"
+            return f'"{self.value}"'
         return f'"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"'
+
+
+class ParentNode(HTMLNode):
+    """
+    ParentNode      : a type of HTMLNode that represents an HTMLNode with children
+    Required variables ----------------------------------------
+        tag         : a string representing the HTML tag name
+        children    : a list of HTMLNode objects representing the children of this node
+    Optional           ----------------------------------------
+        props       : a dictionary of key-value pairs representing the attributes of the HTML tag
+    """
+
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if not self.tag:
+            raise ValueError("Error: no tag was given")
+        if not self.children:
+            raise ValueError("Error: children value is missing")
+        rstring = f"<{self.tag}>"
+        for node in self.children:
+            rstring += node.to_html().strip('"')
+        rstring += f"</{self.tag}>"
+        return rstring
