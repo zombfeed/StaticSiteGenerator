@@ -1,13 +1,36 @@
 from enum import Enum
+from htmlnode import LeafNode
 
 
 class TextType(Enum):
-    PLAIN = 0
+    TEXT = 0
     BOLD = 1
     ITALIC = 2
     CODE = 3
     LINK = 4
     IMAGE = 5
+
+
+def text_node_to_html_node(text_node):
+    match text_node.text_type:
+        case TextType.TEXT:
+            return LeafNode(None, text_node.text)
+        case TextType.BOLD:
+            return LeafNode("b", text_node.text)
+        case TextType.ITALIC:
+            return LeafNode("i", text_node.text)
+        case TextType.CODE:
+            return LeafNode("code", text_node.text)
+        case TextType.LINK:
+            return LeafNode("a", text_node.text, props={"href": text_node.url})
+        case TextType.IMAGE:
+            return LeafNode(
+                "img",
+                "",
+                props={"src": text_node.url, "alt": text_node.text},
+            )
+        case _:
+            raise ValueError("Error: No text_type in given node")
 
 
 class TextNode:
