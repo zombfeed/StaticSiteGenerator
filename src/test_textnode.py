@@ -1,5 +1,6 @@
 import unittest
 from textnode import TextNode, TextType
+from htmlnode import HTMLNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -25,6 +26,14 @@ class TestTextNode(unittest.TestCase):
     def test_url_not_none(self):
         node = TextNode("This is a text node", TextType.BOLD, "https://www.testurl.com")
         self.assertIsNotNone(node.url)
+
+    def test_is_textnode(self):
+        node = TextNode("This is a text node", TextType.BOLD)
+        self.assertIsInstance(node, TextNode)
+
+    def test_is_not_textnode(self):
+        node = HTMLNode("h1", "This is an HTML Node")
+        self.assertNotIsInstance(node, TextNode)
 
 
 if __name__ == "__main__":
