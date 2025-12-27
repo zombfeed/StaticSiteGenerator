@@ -39,11 +39,16 @@ class TestLeafNode(unittest.TestCase):
         node = LeafNode("a", "Click me!", {"href": "https://google.com"})
         self.assertIsNone(node.children)
 
-    def test_is_string(self):
+    def test_leaf_to_html(self):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertEqual(
             node.to_html(), '"<a href="https://www.google.com">Click me!</a>"'
         )
+
+    def test_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            node = LeafNode("a", None)
+            node.to_html()
 
 
 if __name__ == "__main__":
