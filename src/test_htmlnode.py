@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 from textnode import TextNode, TextType
 
 
@@ -26,6 +26,24 @@ class TestHTMLNode(unittest.TestCase):
     def test_is_not_htmlnode(self):
         node = TextNode("This is a text node", TextType.BOLD)
         self.assertNotIsInstance(node, HTMLNode)
+
+
+class TestLeafNode(unittest.TestCase):
+    def test_is_not_none(self):
+        node = LeafNode("a", "Click me!", {"href": "https://google.com"})
+        self.assertIsNotNone(node.tag)
+        self.assertIsNotNone(node.value)
+        self.assertIsNotNone(node.props)
+
+    def test_is_none(self):
+        node = LeafNode("a", "Click me!", {"href": "https://google.com"})
+        self.assertIsNone(node.children)
+
+    def test_is_string(self):
+        node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(
+            node.to_html(), '"<a href="https://www.google.com">Click me!</a>"'
+        )
 
 
 if __name__ == "__main__":
