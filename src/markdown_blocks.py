@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import ParamSpec
 
 
 class BlockType(Enum):
@@ -11,42 +12,29 @@ class BlockType(Enum):
 
 
 def block_to_block_type(block):
-    block_type = BlockType.PARAGRAPH
-    if block.startswith("######"):
-        block_type = BlockType.HEADING
-    elif block.startswith("```") and block.endswith("```"):
-        block_type = BlockType.CODE
-    else:
-        is_incrementing = 1
-        previous = BlockType.PARAGRAPH
-        lines = block.split("\n")
-        for i in range(len(lines)):
-            if lines[i].startswith(">"):
-                if i == 0:
-                    previous = BlockType.QUOTE
-
-                block_type = (
-                    BlockType.QUOTE
-                    if previous != BlockType.PARAGRAPH
-                    else BlockType.PARAGRAPH
-                )
-            elif lines[i].startswith("- "):
-                if i == 0:
-                    previous = BlockType.UNORDERED_LIST
-                block_type = (
-                    BlockType.UNORDERED_LIST
-                    if previous != BlockType.PARAGRAPH
-                    else BlockType.PARAGRAPH
-                )
-            elif lines[i][0].isdigit() and int(lines[i][0]) == is_incrementing:
-                if lines[i].startswith(f"{lines[i][0]}. "):
-                    is_incrementing += 1
-                    block_type = BlockType.ORDERED_LIST
-                else:
-                    block_type = BlockType.PARAGRAPH
-            else:
-                block_type = BlockType.PARAGRAPH
-    return block_type
+    if block.startswith(("# ", "## ", "### ", "#### ", "##### ", "###### ")):
+        return BlockType.HEADING
+    lines = block.split("\n")
+    if len(lines) > 1 and lines[0].startswith("```") and lines[-1].endswith("```"):
+        return BlockType.CODE
+    if block.startswith(">"):
+        for line in lines:
+            if not line.startswith(">"):
+                return BlockType.PARAGRAPH
+        return BlockType.QUOTE
+    if block.startswith("- "):
+        for line in lines:
+            if not line.startswith("- "):
+                return BlockType.PARAGRAPH
+        return BlockType.UNORDERED_LIST
+    if block.startswith("1. "):
+        i = 1
+        for line in lines:
+            if not line.startswith(f"{i}. "):
+                return BlockType.PARAGRAPH
+            i += 1
+        return BlockType.ORDERED_LIST
+    return BlockType.PARAGRAPH
 
 
 def markdown_to_blocks(markdown):

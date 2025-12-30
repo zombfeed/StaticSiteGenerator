@@ -45,24 +45,24 @@ class TestBlockToBlockType(unittest.TestCase):
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
 
     def test_block_is_heading(self):
-        block = "###### this is a heading"
+        block = "# this is a heading"
         self.assertEqual(block_to_block_type(block), BlockType.HEADING)
 
     def test_block_is_not_heading(self):
-        block = "#### this is not a heading"
+        block = "#this is not a heading"
         self.assertNotEqual(block_to_block_type(block), BlockType.HEADING)
 
     def test_block_is_code(self):
-        block = "```this is a code block```"
-        multiline_block = "```this is a code block\nwith multiple lines```"
+        block = "```\nthis is a code block\n```"
+        multiline_block = "```\nthis is a code block\nwith multiple lines\n```"
         self.assertEqual(block_to_block_type(block), BlockType.CODE)
         self.assertEqual(block_to_block_type(multiline_block), BlockType.CODE)
 
     def test_block_is_not_code(self):
         block = "```this is not code"
-        multiline_block = "```this is not code\nbecause it doesnt end in backquotes"
+        multiline_block = "```\nthis is not code\nbecause it doesnt end in backquotes"
         multiline_block2 = (
-            "this is not code\nbecause it doesnt start with backquotes```"
+            "this is not code\nbecause it doesnt start with backquotes\n```"
         )
         self.assertNotEqual(block_to_block_type(block), BlockType.CODE)
         self.assertNotEqual(block_to_block_type(multiline_block), BlockType.CODE)
