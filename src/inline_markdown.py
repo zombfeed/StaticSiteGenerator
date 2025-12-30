@@ -2,8 +2,11 @@ import re
 from textnode import TextType, TextNode
 
 
+def markdown_to_blocks(markdown):
+    return [block.strip() for block in markdown.split("\n\n")]
+
+
 def text_to_textnodes(text):
-    new_nodes = []
     node = TextNode(text, TextType.TEXT)
     return split_nodes_link(
         split_nodes_image(
