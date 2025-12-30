@@ -177,6 +177,28 @@ class TestSplitNodesImage(unittest.TestCase):
             new_nodes,
         )
 
+    def test_just_text(self):
+        node = TextNode("This is text", TextType.TEXT)
+        nodes = [
+            TextNode("This is text", TextType.TEXT),
+            TextNode(" and this is more text", TextType.TEXT),
+        ]
+        new_node = split_nodes_image([node])
+        new_nodes = split_nodes_image(nodes)
+        self.assertListEqual(
+            [
+                TextNode("This is text", TextType.TEXT),
+            ],
+            new_node,
+        )
+        self.assertListEqual(
+            [
+                TextNode("This is text", TextType.TEXT),
+                TextNode(" and this is more text", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
 
 class TestSplitNodesLink(unittest.TestCase):
     def test_split_links(self):
@@ -220,6 +242,28 @@ class TestSplitNodesLink(unittest.TestCase):
                 TextNode(" and this is bold", TextType.BOLD),
                 TextNode("link", TextType.LINK, "https://www.boot.dev"),
                 TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            new_nodes,
+        )
+
+    def test_just_text(self):
+        node = TextNode("This is text", TextType.TEXT)
+        nodes = [
+            TextNode("This is text", TextType.TEXT),
+            TextNode(" and this is more text", TextType.TEXT),
+        ]
+        new_node = split_nodes_link([node])
+        new_nodes = split_nodes_link(nodes)
+        self.assertListEqual(
+            [
+                TextNode("This is text", TextType.TEXT),
+            ],
+            new_node,
+        )
+        self.assertListEqual(
+            [
+                TextNode("This is text", TextType.TEXT),
+                TextNode(" and this is more text", TextType.TEXT),
             ],
             new_nodes,
         )
