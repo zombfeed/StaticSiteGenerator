@@ -1,4 +1,5 @@
 import unittest
+
 from inline_markdown import (
     split_nodes_delimiter,
     split_nodes_link,

@@ -1,4 +1,3 @@
-from re import X
 import unittest
 
 from htmlnode import HTMLNode, LeafNode, ParentNode

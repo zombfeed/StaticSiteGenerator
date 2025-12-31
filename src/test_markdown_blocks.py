@@ -1,6 +1,11 @@
 from typing import MutableMapping
 import unittest
-from markdown_blocks import BlockType, markdown_to_blocks, block_to_block_type
+from markdown_blocks import (
+    BlockType,
+    markdown_to_blocks,
+    block_to_block_type,
+    markdown_to_html_node,
+)
 
 
 class TestMarkddownToBlocks(unittest.TestCase):
@@ -122,6 +127,104 @@ class TestBlockToBlockType(unittest.TestCase):
         )
         self.assertNotEqual(
             block_to_block_type(mutliline_block2), BlockType.ORDERED_LIST
+        )
+
+
+class TestMarkdownToHTML(unittest.TestCase):
+    def test_markdown_to_html(self):
+        md = """
+## this is a heading
+
+### this is another heading
+
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+>here is a quote by some guy
+>he said this thing
+
+- this is an unordered list item
+- this is also a ulist item
+
+1. this is an ordered list item
+2. this is another olist item
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h2>this is a heading</h2><h3>this is another heading</h3><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p><blockquote>here is a quote by some guy he said this thing</blockquote><ul><li>this is an unordered list item</li><li>this is also a ulist item</li></ul><ol><li>this is an ordered list item</li><li>this is another olist item</li></ol></div>",
+        )
+
+    def test_paragraphs(self):
+        md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_codeblock(self):
+        md = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+    def test_quoteblock(self):
+        md = """
+>This is a quote block that
+>This is another part of the block
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a quote block that This is another part of the block</blockquote></div>",
+        )
+
+    def test_unorderedlist(self):
+        md = """
+- this is an unordered list
+- this is another item
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>this is an unordered list</li><li>this is another item</li></ul></div>",
+        )
+
+    def test_orderedlist(self):
+        md = """
+1. this is an ordered list
+2. this is another item
+"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>this is an ordered list</li><li>this is another item</li></ol></div>",
         )
 
 
