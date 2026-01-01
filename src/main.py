@@ -1,6 +1,7 @@
 import os
 import shutil
 from copystatic import copy_files_recursive
+from gencontent import generate_page
 
 static_dir = "./static"
 public_dir = "./public"
@@ -12,6 +13,7 @@ def main():
         shutil.rmtree(public_dir)
     print("Copying static files to public directory...")
     copy_files_recursive(static_dir, public_dir)
+    generate_page("./content/index.md", "template.html", "./public/index.html")
 
 
 if __name__ == "__main__":

@@ -42,7 +42,7 @@ class TestLeafNode(unittest.TestCase):
     def test_leaf_to_html(self):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertEqual(
-            node.to_html(), '"<a href="https://www.google.com">Click me!</a>"'
+            node.to_html(), '<a href="https://www.google.com">Click me!</a>'
         )
 
     def test_leaf_to_html_no_value(self):
@@ -72,7 +72,7 @@ class TestParentNode(unittest.TestCase):
 
     def test_parent_to_html_no_children(self):
         with self.assertRaises(ValueError):
-            node = ParentNode("div", [])
+            node = ParentNode("div", None)
             node.to_html()
 
     def test_parent_to_html_with_children(self):

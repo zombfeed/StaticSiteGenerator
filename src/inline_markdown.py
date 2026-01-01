@@ -85,7 +85,7 @@ def split_nodes_link(old_nodes):
             continue
         for link_alt, link_link in links:
             delimiter = f"[{link_alt}]({link_link})"
-            sections = original_text.split(delimiter)
+            sections = original_text.split(delimiter, 1)
             if len(sections) != 2:
                 raise ValueError("Error: Invalid markdown, link section not closed")
             if sections[0] != "":
